@@ -12,7 +12,6 @@ var apiAuth =  {
 };
 
 var analytics = undefined;
-var downloadEvent = process.env.ANALYTICS_EVENT_DOWNLOAD || 'download';
 if (process.env.ANALYTICS_TOKEN) {
     analytics = new Analytics(process.env.ANALYTICS_TOKEN);
 }
@@ -62,10 +61,12 @@ myNuts.after('download', function(download, next) {
         var userId = download.req.query.user;
 
         analytics.track({
-            event: downloadEvent,
             anonymousId: userId? null : uuid.v4(),
             userId: userId,
+            event: 'download',
             properties: {
+                category: 'oct-updates',
+                label: download.version.tag,
                 version: download.version.tag,
                 channel: download.version.channel,
                 platform: download.platform.type,
